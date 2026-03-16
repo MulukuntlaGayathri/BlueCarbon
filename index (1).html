@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eco Ledger Platform - Home</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+    .navbar { background:#2f855a; padding:15px; text-align:right; }
+    .navbar a { color:white; font-weight:bold; margin-left:15px; text-decoration:none; }
+    .navbar a:hover { text-decoration:underline; }
+    .container { padding: 20px; }
+    .card { background:white; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:15px; }
+    h1, h2 { color:#2f855a; }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="index.html">🏠 Home</a>
+    <a href="admin.html">👨‍💼 Admin</a>
+    <a href="ngo.html">🤝 NGO</a>
+    <a href="investor.html">💰 Investors</a>
+  </div>
+
+  <div class="container">
+    <h1>Welcome to Eco Ledger Platform 🌿</h1>
+    <div id="stats" class="card">
+      <h2>Loading stats...</h2>
+    </div>
+  </div>
+
+  <script>
+    async function loadStats() {
+      const statsDiv = document.getElementById('stats');
+      try {
+        const res = await fetch('http://localhost:5000/api/projects');
+        const projects = await res.json();
+
+        let totalCredits = 0;
+        if (projects.length > 0) {
+          totalCredits = projects.reduce((sum, p) => sum + p.carbon_rate_tons, 0);
+        }
+
+        statsDiv.innerHTML = `
+          <h2>Platform Stats</h2>
+          <p><strong>Total Projects:</strong> ${projects.length}</p>
+          <p><strong>Total Carbon Credits:</strong> ${totalCredits.toFixed(2)}</p>
+        `;
+      } catch (err) {
+        statsDiv.innerHTML = "<p>❌ Failed to load stats: " + err.message + "</p>";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadStats);
+  </script>
+
+</body>
+</html>

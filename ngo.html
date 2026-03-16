@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NGO Project Submission</title>
+  <style>
+    body { font-family: 'Poppins', sans-serif; background: #e6f4ea; margin:0; padding:0; color:#2e2e2e; }
+    .navbar { background:#2f855a; color:white; padding:15px; text-align:right; }
+    .navbar a { color:white; font-weight:bold; margin-left:15px; text-decoration:none; }
+    .navbar a:hover { text-decoration:underline; }
+    h2 { text-align:center; margin-top:20px; color:#2f855a; }
+    form { max-width:500px; margin:30px auto; padding:25px; background:white; border-radius:15px; box-shadow:0 6px 15px rgba(0,0,0,0.1);}
+    label { display:block; margin-top:15px; font-weight:bold; color:#2f855a;}
+    input, textarea { width:100%; padding:10px; margin-top:6px; border:1px solid #ccc; border-radius:8px; font-size:1rem;}
+    textarea { resize: vertical; min-height:80px;}
+    button { margin-top:20px; width:100%; padding:12px; background:#38a169; color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition: background 0.3s;}
+    button:hover { background:#2f855a;}
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="index.html">🏠 Home</a>
+    <a href="admin.html">👨‍💼 Admin</a>
+    <a href="ngo.html">🤝 NGO</a>
+    <a href="investor.html">💰 Investors</a>
+    <a href="community.html">🌊 Community</a>
+  </div>
+
+  <h2>Submit Project (NGO)</h2>
+  <form id="projectForm">
+    <label>Project Name</label>
+    <input type="text" id="name" required>
+
+    <label>Description</label>
+    <textarea id="description" required></textarea>
+
+    <label>Location</label>
+    <input type="text" id="location" required>
+
+    <label>Trees Planted</label>
+    <input type="number" id="treesPlanted" required>
+
+    <button type="submit">Submit Project</button>
+  </form>
+
+  <script>
+    const form = document.getElementById('projectForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const project = {
+        projectName: document.getElementById('name').value,
+        projectLocation: document.getElementById('location').value,
+        treesPlanted: document.getElementById('treesPlanted').value
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(project)
+        });
+
+        const data = await res.json();
+        if (res.status === 201) {
+          alert("✅ Project submitted successfully!");
+          form.reset();
+        } else {
+          alert("❌ Error: " + data.error);
+        }
+      } catch (err) {
+        alert("❌ Network error: " + err.message);
+      }
+    });
+  </script>
+
+</body>
+</html>
